@@ -4,13 +4,13 @@ import got from 'got'
 
 const saveImageFromAPI = async (
   url: string,
-  json: Record<string, any> | undefined,
+  searchParams: Record<string, any>,
   folderPath: string
 ) => {
   try {
     const resp = await got
       .post(url, {
-        json,
+        searchParams,
       })
       .buffer()
     fs.writeFileSync(path.join(folderPath, 'og-image.jpeg'), resp)
@@ -20,19 +20,19 @@ const saveImageFromAPI = async (
 }
 
 export const generateOGImage = () => {
+  console.log('generating OG Image...')
   try {
     const folderPath = 'public/'
     const params = {
       title: 'Hello OG Image',
-      date: new Date(),
+      date: new Date().toString(),
+      author: JSON.stringify([
+        {
+          name: 'Deadman',
+          twitter: '@taker',
+        },
+      ]),
     }
-    // const searchParams = Object.keys(params)
-    //   .map((k) => {
-    //     return `${encodeURIComponent(k)}=${encodeURIComponent(
-    //       params[k as keyof typeof params]
-    //     )}`
-    //   })
-    //   .join('&')
 
     const API_URL = `http://localhost:3000/api/og-image`
 
